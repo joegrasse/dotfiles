@@ -1,0 +1,68 @@
+# Screen manual
+# http://www.gnu.org/software/screen/manual/
+
+altscreen on
+
+attrcolor b ".I"
+termcapinfo xterm 'Co#256:AB=\E[48;5;%dm:AF=\E38;5;%dm'
+defbce "on"
+
+hardstatus off
+#hardstatus alwayslastline
+#hardstatus string "%{=b kG}[ $SCREEN_HOST %{G}][%= %{w}%?%-Lw%?%{r}(%{+B}%{w}%n* %f%t%?(%u)%?%{-B}%{r})%{w}%?%+Lw%?%?%= %{G}][ %{B}%Y-%m-%d %{W}%c %{G}]"
+
+# Set current attributes to bold with black background and bright green foreground: %{=b kG}
+# Display host name inside brackets and reset foreground color to bright green: [ $SCREEN_HOST %{G}]
+# Display window list in brackets
+#   open bracket set foreground color white, not bold: [%{-b w}
+#   display the windows (with flags) before current (if any), pad or truncating if necessary: %L=%=%-Lw%45L>
+#   change foreground color to red, bolded and display parentheses: %{+b r}(
+#   current window displayed as number* flags title  foreground color white and blink: %{+B w}%n* %f%t
+#   other users on current window (if any): %?(%u)%?
+#   remove attribute blinking and change foreground color to red and display closing parentheses: %{-B r})
+#   remove bold change foreground color to white and display windows (with flags) after current (if any): %{-b w}%+Lw
+#   display padding if needed and absolute position next part: %=%-21= 
+#   add bold and set foreground color to bright green and close bracket: %{+b G}]
+# Display current time in brackets
+#   open brackets and change foreground color to bright blue and display date: [ %{B}%Y-%m-%d
+#   change foreground color to bright white and display current time in 24h format: %{W}%c
+#   change foreground to bright green, close parentheses: %{G}]
+caption always
+caption string "%{=b kG}[ $SCREEN_HOST %{G}][%{-b w}%L=%=%-Lw%45L>%{+b r}(%{+B w}%n* %f%t%?(%u)%?%{-B r})%{-b w}%+Lw%=%-21=%{+b G}][ %{B}%Y-%m-%d %{W}%c %{G}]"
+
+# 32000 scrollback buffer
+defscrollback 32000
+
+# allow scrolling with scroll bar
+termcapinfo xterm* ti@:te@
+
+# Default shell
+shell bash
+
+silencewait 10
+vbell on
+
+# Default window title
+shelltitle "shell"
+
+# When ssh connection dies autodetach screen
+autodetach on
+
+# This allows titlebar manipulations to work
+termcapinfo xterm* 'hs:ts=\E]2;:fs=\007:ds=\E]2;screen\007'
+termcapinfo xterm* 'is=\E[r\E[m\E[2J\E[H\E[?7h\E[?1;4;6l'
+
+bind t title
+bind A
+
+# Make F1 show help screen
+bindkey -k k1 help
+# Make F2 and F3 work for previous and next screen window
+bindkey -k k2 prev
+bindkey -k k3 next
+# Make F4 create a new screen window and F5 show list of screen windows
+bindkey -k k4 screen
+bindkey -k k5 windowlist -b
+
+bind s split
+bind q only
