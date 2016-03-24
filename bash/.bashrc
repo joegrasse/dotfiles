@@ -8,7 +8,6 @@ alias mv='mv -i'
 alias EXIT='exit'
 alias sr='screen -DR'
 alias cl='sudo cat /usr2/mysql/logs/mysql.err|grep -vE "(Statement may not be safe|Unsafe statement written to the binary log)"'
-alias vim='/usr2/shared/gabes/.local/bin/vim'
 
 if test -n "$PS1"; then
 	# Disable ctrl-S
@@ -20,16 +19,32 @@ if [ -f /etc/bashrc ]; then
         . /etc/bashrc
 fi
 
+# Check for 64bit
+IS_64BIT=false
+if [ `uname -m` == 'x86_64' ]; then
+  IS_64BIT=true
+fi
+
 if [ -x /etc/profile.d/mysql.sh ] && [[ ! "$PATH" =~ 'mysql' ]]; then
         . /etc/profile.d/mysql.sh
 fi
 
 export PATH=$PATH:/sbin
 
-export EDITOR=/usr2/shared/gabes/.local/bin/vim
+if [ "$IS_64BIT" == true ]; then
+  if [ -x '/usr2/shared/gabes/.local64/bin/vim' ]; then
+    alias vim='/usr2/shared/gabes/.local64/bin/vim'
+    export EDITOR=/usr2/shared/gabes/.local64/bin/vim
+  fi
+else
+  if [ -x '/usr2/shared/gabes/.local/bin/vim' ]; then
+    alias vim='/usr2/shared/gabes/.local/bin/vim'
+    export EDITOR=/usr2/shared/gabes/.local/bin/vim
+  fi
+fi
 
 # Go Stuff
-if [ `uname -m` == 'x86_64' ]; then
+if [ "$IS_64BIT" == true ]; then
 	export GOROOT=$HOME/go-64
 	export GOPATH=$HOME/gowork-64
 else
