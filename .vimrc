@@ -2,7 +2,6 @@ syntax on
 colorscheme molokai
 
 set hidden
-set number
 
 set path+=/usr2/ps/isp/include/sys
 set path+=/usr2/ps/isp/src/sys
@@ -91,7 +90,9 @@ function! ToggleIDEView()
     if nerdtree_open && tagbar_open
         NERDTreeClose
         TagbarClose
+        set nonumber
     else
+        set number
         if nerdtree_open
             TagbarOpen
             
