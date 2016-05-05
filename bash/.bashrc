@@ -33,18 +33,18 @@ fi
 export PATH=$PATH:/sbin
 
 if [ "$IS_64BIT" == true ]; then
-  if [ -x '/usr2/shared/gabes/.local64/bin/vim' ]; then
-    alias vim='/usr2/shared/gabes/.local64/bin/vim'
-    export EDITOR=/usr2/shared/gabes/.local64/bin/vim
+  if [ -x './.local64/bin/vim' ]; then
+    alias vim='./.local64/bin/vim'
+    export EDITOR=./.local64/bin/vim
     
     if [ -d './.local64/bin' ]; then
         export PATH=./.local64/bin:$PATH
     fi
   fi
 else
-  if [ -x '/usr2/shared/gabes/.local/bin/vim' ]; then
-    alias vim='/usr2/shared/gabes/.local/bin/vim'
-    export EDITOR=/usr2/shared/gabes/.local/bin/vim
+  if [ -x './.local/bin/vim' ]; then
+    alias vim='./.local/bin/vim'
+    export EDITOR=./.local/bin/vim
     
     if [ -d './.local/bin' ]; then
         export PATH=./.local/bin:$PATH
