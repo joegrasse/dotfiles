@@ -2,7 +2,9 @@
 
 # User specific aliases and functions
 
+alias screen='IS_INSIDE_SCREEN="true" screen'
 alias vi='vim'
+alias view='vim -R'
 alias rm='rm -i'
 alias cp='cp -i'
 alias mv='mv -i'
@@ -52,17 +54,38 @@ else
   fi
 fi
 
-# Go Stuff
-if [ "$IS_64BIT" == true ]; then
-	export GOROOT=$HOME/go-64
-	export GOPATH=$HOME/gowork-64
-else
-	export GOROOT=$HOME/go
-	export GOPATH=$HOME/gowork
-fi
+#if [ -r /etc/profile.d/golang.sh ] && [[ ! "$PATH" =~ 'go/bin' ]]; then
+#        . /etc/profile.d/golang.sh
+#fi
 
-export PATH=$PATH:$GOROOT/bin
-export PATH=$PATH:$GOPATH/bin
+# Go Stuff
+#if [ "$IS_64BIT" == true ]; then
+	#export GOROOT=$HOME/go-64
+	#export GOPATH=$HOME/gowork-64
+#else
+	#export GOROOT=$HOME/go
+	#export GOPATH=$HOME/gowork
+#fi
+
+#export PATH=$PATH:$GOROOT/bin
+#export PATH=$PATH:$GOPATH/bin
+
+ssh()
+{
+   # Screen sets the TERMCAP, so we can test for the presence of the "screen" substring.
+   # We should also detect IS_INSIDE_SCREEN so we can forward the parameter from future SSH sessions.
+   if [[ ("$IS_INSIDE_SCREEN" == "true") || (-n "$TERMCAP" && "$TERMCAP" == *"screen"*)  ]]; then
+        LANG="screen" command ssh "$@"                                                                                                                                                                                                        
+   else
+        command ssh "$*"
+   fi
+ 
+}
+
+if [[ $LANG == "screen" ]]; then
+        export IS_INSIDE_SCREEN="true"
+        export LANG="en_US.UTF-8"
+fi  
 
 SCREEN_HOST=$HOSTNAME
 
