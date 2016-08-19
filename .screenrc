@@ -37,7 +37,7 @@ defscrollback 32000
 termcapinfo xterm* ti@:te@
 
 # Default shell
-shell bash
+shell /bin/sh
 
 silencewait 10
 vbell on

@@ -1,5 +1,7 @@
 # .bashrc
 
+shopt -s expand_aliases
+
 # User specific aliases and functions
 
 alias screen='IS_INSIDE_SCREEN="true" screen'
@@ -77,7 +79,7 @@ ssh()
    if [[ ("$IS_INSIDE_SCREEN" == "true") || (-n "$TERMCAP" && "$TERMCAP" == *"screen"*)  ]]; then
         LANG="screen" command ssh "$@"                                                                                                                                                                                                        
    else
-        command ssh "$*"
+        command ssh "$@"
    fi
  
 }
