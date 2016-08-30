@@ -49,27 +49,28 @@ nnoremap <leader><Leader> :call ToggleIDEView()<CR>
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 " allow pasting with out auto-indenting 
-if $IS_INSIDE_SCREEN == "true"
-    let &t_SI .= "\eP\eP\e[?2004h\e\e\\\\"
-    let &t_EI .= "\eP\eP\e[?2004l\e\e\\\\"
-    function XTermPasteBegin(ret)
-        set pastetoggle=<Esc>[201~
-        set paste
-        return a:ret
-    endfunction
+function! WrapForScreen(s)
+    if $IS_INSIDE_SCREEN == "true"
+        let screen_start = "\<Esc>P"
+        let screen_end = "\<Esc>\\"
 
-    imap <expr> <Esc>[200~ XTermPasteBegin("")
-elseif &term =~ "xterm.*"
-    let &t_SI .= "\e[?2004h"
-    let &t_EI .= "\e[?2004l"
-    function XTermPasteBegin(ret)
-        set pastetoggle=<Esc>[201~
-        set paste
-        return a:ret
-    endfunction
+        " return screen_start . substitute(a:s, "\<Esc>", "\<Esc>\<Esc>", 'g') . screen_end
+        return screen_start . a:s . screen_end
+    endif
 
-    imap <expr> <Esc>[200~ XTermPasteBegin("")
-endif
+    return a:s
+endfunction
+
+let &t_SI .= WrapForScreen("\<Esc>[?2004h")
+let &t_EI .= WrapForScreen("\<Esc>[?2004l")
+
+function XTermPasteBegin()
+    set pastetoggle=<Esc>[201~
+    set paste
+    return ""
+endfunction
+
+inoremap <special> <expr> <Esc>[200~ XTermPasteBegin()
 
 " Configure Plugins
 call plug#begin()
@@ -184,7 +185,7 @@ endfunction
 
 function! GoprojectInstall()
     call GoprojectProgress("installing...")
-    let out = system('goproject bld')
+    let out = system('goproject install')
     if v:shell_error 
         let errors = go#tool#ParseErrors(split(out, '\n'))
         if !empty(errors)
