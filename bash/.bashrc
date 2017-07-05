@@ -89,24 +89,55 @@ if [[ $LANG == "screen" ]]; then
         export LANG="en_US.UTF-8"
 fi  
 
-SCREEN_HOST=$HOSTNAME
 
 setup_os_specific(){
 	local os=`cat /etc/issue`
 	case $os in
 		*Red\ Hat*release\ 7* )
 			setup_terminal "xterm-color"
+			return
 		;;
 		*CentOS*release\ 4* )
 			setup_terminal "xterm-256color"
+			return
 		;;
 		*CentOS*release\ 5* )
 			setup_terminal "xterm-256color"
+			return
 		;;
 		*CentOS*release\ 6* )
 			setup_terminal "xterm-256color"
+			return
+		;;
+		*CentOS*release\ 7* )
+			setup_terminal "xterm-256color"
+			return
 		;;
 	esac
+
+	local release=`type lsb_release 2>/dev/null`
+
+	if [ "$release" != "" ]; then
+                os=`lsb_release -a`
+                case $os in
+                        *Red\ Hat*release\ 7* )
+                                setup_terminal "xterm-color"
+                        ;;
+                        *CentOS*release\ 4* )
+                                setup_terminal "xterm-256color"
+                        ;;
+                        *CentOS*release\ 5* )
+                                setup_terminal "xterm-256color"
+                        ;;
+                        *CentOS*release\ 6* )
+                                setup_terminal "xterm-256color"
+                        ;;
+                        *CentOS*release\ 7* )
+                                setup_terminal "xterm-256color"
+                        ;;
+                esac
+        fi
+
 }
 
 setup_terminal() {
