@@ -1,6 +1,8 @@
 # .bashrc
 
 shopt -s expand_aliases
+shopt -s histappend histreedit histverify
+
 
 # User specific aliases and functions
 
@@ -13,6 +15,27 @@ alias mv='mv -i'
 alias EXIT='exit'
 alias sr='screen -DR'
 alias cl='sudo cat /usr2/mysql/logs/mysql.err|grep -vE "(Statement may not be safe|Unsafe statement written to the binary log)"'
+
+export HOSTNAME=`hostname -f`
+
+## history config
+export HISTIGNORE="&:[ ]*:history*:man*"
+export HISTFILESIZE=1000000000
+export HISTSIZE=1000000
+export IGNOREEOF=1
+export HISTFILE="$HOME/.history/$HOSTNAME"
+export HISTTIMEFORMAT="%F %T  "
+
+export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
+
+# if history file doesn't exist we won't automatically append
+# this is a work around
+if [ ! -f $HISTFILE ]; then
+        touch $HISTFILE
+        NOW=`date +%s`
+        echo "#$NOW" > $HISTFILE
+        echo "# created history file" > $HISTFILE
+fi
 
 if test -n "$PS1"; then
 	# Disable ctrl-S
@@ -154,21 +177,6 @@ setup_terminal() {
 }
 
 function my_prompt {
-        local HOSTNAME=`hostname -f`
-
-        ## history config
-        export HISTIGNORE="&:[ ]*:history*:man*"
-        export HISTFILESIZE=1000000000
-        export HISTSIZE=1000000
-        export IGNOREEOF=1
-        export HISTFILE="$HOME/.history/$HOSTNAME"
-        export HISTTIMEFORMAT="%F %T  "
-
-        _my_prompt() {
-                history -a
-        }
-        export PROMPT_COMMAND=_my_prompt
-
         if [ "$PS1" ]; then
                 local COLOR=""
                 local NOCOLOR=""
