@@ -34,7 +34,7 @@ if [ ! -f $HISTFILE ]; then
         touch $HISTFILE
         NOW=`date +%s`
         echo "#$NOW" > $HISTFILE
-        echo "# created history file" > $HISTFILE
+        echo "# created history file" >> $HISTFILE
 fi
 
 if test -n "$PS1"; then
