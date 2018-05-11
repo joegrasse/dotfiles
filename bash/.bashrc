@@ -154,13 +154,26 @@ setup_terminal() {
 }
 
 function my_prompt {
+        local HOSTNAME=`hostname -f`
+
+        ## history config
+        export HISTIGNORE="&:[ ]*:history*:man*"
+        export HISTFILESIZE=1000000000
+        export HISTSIZE=1000000
+        export IGNOREEOF=1
+        export HISTFILE="$HOME/.history/$HOSTNAME"
+        export HISTTIMEFORMAT="%F %T  "
+
+        _my_prompt() {
+                history -a
+        }
+        export PROMPT_COMMAND=_my_prompt
+
         if [ "$PS1" ]; then
                 local COLOR=""
                 local NOCOLOR=""
                 local TITLEBAR=""
                 local SCREEN_COLOR=""
-                
-                local HOSTNAME=`hostname -f`
 
                 local HOST=`echo $HOSTNAME|awk -F . '{print $1}'`
                 local HOST_ENV=`echo $HOSTNAME|awk -F . '{print $2}'`
